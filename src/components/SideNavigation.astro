@@ -1,0 +1,25 @@
+---
+import * as Navigation from '../content/cms/navigation.md'
+---
+
+<section class='w-[var(--left-nav-width)] h-[calc(100dvh_-_60px)] navbar fixed left-0 top-[60px] overflow-y-auto p-2 border-r border-r-slate-600 bg-slate-800'>
+	<nav>
+		{
+		Navigation.frontmatter.navigations.map((n) => (
+			<a class='navBtn' href={n.link}>
+				<i class={`${n.icon}`}></i>
+				{n.name}
+			</a>
+
+		))
+		}
+	</nav>
+</section>
+<style>
+.navBtn{
+	@apply flex flex-row items-center gap-3 text-lg p-2 rounded-sm text-slate-400 hover:bg-slate-600;
+}
+.navBtn i{
+	@apply w-[20px];
+}
+</style>

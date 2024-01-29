@@ -1,0 +1,17 @@
+---
+const {iconClass,statName,receivings,spendings,totalTransactions} = Astro.props;
+---
+<div class='card flex flex-row items-center gap-3 bg-slate-700 border border-slate-600 rounded-sm p-4 py-6 text-slate-500'>
+	<div class='icon flex justify-center items-center w-full h-full max-w-[90px] aspect-sqaure bg-slate-600 p-6 rounded-full'>
+		<i class={`${iconClass} text-4xl text-slate-300`}></i>
+	</div>
+	<div class='info'>
+		<h2 class='font-bold text-2xl'>
+			{statName === 'Received' && `Rs.${receivings}`}
+			{statName === 'Spent' && `Rs.${spendings}`}
+			{statName === 'Balance' && `Rs.100,000`}
+			{statName === 'Transactions' && totalTransactions}
+		</h2>
+		<h2 class='text-xl'>{statName}</h2>
+	</div>
+</div>

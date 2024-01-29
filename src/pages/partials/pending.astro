@@ -1,0 +1,26 @@
+---
+export const prerender = false;
+export const parital = true;
+import {storage} from '../../firebase/client';
+import {ref,uploadBytes,getDownloadURL} from 'firebase/storage';
+const headers = await Astro.request.headers;
+const formData = await Astro.request.formData();
+const rid = headers.get('rid')?.toString();
+const img = formData.get('receipt') as File;
+const sref = ref(storage, `receipts/${rid}`);
+let imgURL;
+try{
+	const fileRef = await uploadBytes(sref,img)
+	imgURL = await getDownloadURL(fileRef.ref)
+}catch(err){
+	return new Response("Failed",{
+		status:400,
+	})
+}
+---
+<div hx-swap-oob='afterbegin:#responses'>
+	<div id='res'  data-type='success'>
+		<p>Receipt for {rid} was added.</p>
+	</div>
+</div>
+

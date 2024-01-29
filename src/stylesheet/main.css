@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root{
+    --topbar-height:60px;
+    --left-nav-width:250px;
+  }
+  body{
+    @apply bg-slate-800;
+  }
+  img {
+    @apply block w-full;
+  }
+}

@@ -1,0 +1,43 @@
+---
+const {type,msg} = Astro.props;
+---
+<div id='responses'>
+	<!-- <div id='res' data-type={type}> -->
+	<!-- 	<p>{msg}</p> -->
+	<!-- </div> -->
+</div>
+<style is:global>
+#responses{
+	position:fixed;
+	right:10px;
+	top:10px;
+}
+#res{
+	animation: inout 4s linear;
+	@apply opacity-0 p-2 border rounded-md;
+}
+#res[data-type='err']{
+	@apply bg-red-400/80 text-red-100 border-red-900;
+}
+#res[data-type='success']{
+	@apply bg-green-400/80 text-green-100 border-green-900;
+}
+@keyframes inout {
+0%{
+	opacity:0;
+}
+10%{
+	opacity:1;
+}
+80%{
+	opacity:1;
+}
+90%{
+	opacity:0;
+}
+100%{
+	opacity:0;
+	display:none;
+}
+}
+</style>
