@@ -47,28 +47,3 @@ form input{
 	@apply h-full bg-slate-300 text-slate-800 rounded-sm;
 }
 </style>
-<!-- <script> -->
-<!-- import {storage} from '../firebase/client'; -->
-<!-- import {ref,uploadBytes,getDownloadURL} from 'firebase/storage'; -->
-<!-- const form = document.querySelector('#test') as HTMLFormElement; -->
-<!---->
-<!-- form.addEventListener('submit',async (e) => { -->
-<!-- 	e.preventDefault(); -->
-<!---->
-<!-- 	const rid = form.getAttribute('data-id'); -->
-<!-- 	const formData = new FormData(form); -->
-<!-- 	const img = formData.get('receipt') as File; -->
-<!-- 	const sref = ref(storage, `receipts/${rid}`); -->
-<!-- 	let imgURL; -->
-<!-- 	try{ -->
-<!-- 		const fileRef = await uploadBytes(sref,img) -->
-<!-- 		imgURL = await getDownloadURL(fileRef.ref) -->
-<!-- 		const event = new Event('success') -->
-<!-- 		document.body.dispatchEvent(event); -->
-<!-- 	}catch(err){ -->
-<!-- 		const event = new Event('failed') -->
-<!-- 		document.body.dispatchEvent(event); -->
-<!-- 	} -->
-<!-- }) -->
-<!---->
-<!-- </script> -->
