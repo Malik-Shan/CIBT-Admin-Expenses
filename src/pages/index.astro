@@ -62,7 +62,7 @@ const {result} = await p.json();
 						
 						{
 						result.map((r) => (
-							<PendingTransactions id={r.id} receiver={r.receiver} reason={r.reason} amount={r.amount} />
+							<PendingTransactions id={r.id} receiver={r.receiver} reason={r.reason} amount={r.amount} sheetname={date} received={r.received} />
 						))
 						}
 

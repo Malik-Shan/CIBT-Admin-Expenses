@@ -1,12 +1,13 @@
 ---
-const {receiver,reason,amount,id} = Astro.props;
+const {receiver,reason,amount,id,sheetname,received} = Astro.props;
 ---
-<label id={`receipt-${id}`} for={`pid-${id}`} class='payment  p-2 px-4 bg-slate-600 text-slate-300 rounded-sm cursor-pointer'>
+<label id={`receipt-${id}`} for={`pid-${id}`} class='group/payment payment  p-2 px-4 bg-slate-600 text-slate-300 rounded-sm cursor-pointer [&.htmx-request]:pointer-events-none [&.htmx-request]:grayscale-[.6] [&.htmx-request]:animate-pulse'>
 	<div class='flex flex-row justify-between items-center mb-1'>
-		<div class='flex flex-col w-[33%]'>
+		<div class='flex flex-col w-[calc(100%/4)]'>
 			<h2 class='text-xl font-bold'>{receiver}</h2>
 			<h3 class='text-sm'>{reason}</h3>
 		</div>
+		<h2 class='text-slate-400 text-lg'>Transaction ID : #{id}</h2>
 		<h2 data-type='-' class='data-[type="+"]:text-green-300 data-[type="-"]:text-red-400 status font-bold flex justify-center items-center gap-1'>Rs.{amount}</h2>
 		<h2 class='status text-yellow-400 font-bold flex justify-center items-center gap-1'><i class="fa-solid fa-receipt"></i>Awaiting Receipt</h2>
 	</div>
@@ -16,12 +17,13 @@ const {receiver,reason,amount,id} = Astro.props;
 		hx-trigger='submit'
 		hx-swap='delete'
 		hx-target={`#receipt-${id}`}
+		hx-indicator={`#receipt-${id}`}
 		hx-encoding='multipart/form-data'
-		hx-headers={`{"rid": "${id}"}`}>
+		hx-headers={`{"rid": "${id}","sheetname": "${sheetname}"}`}>
 		<div class='flex flex-row justify-end gap-2'>
 			<div class='inputGroup'>
-				<label for='received'>Received:</label>
-				<input type='number' min='0' id='received' name='received' />
+				<label for='received'>Change: </label>
+				<input type='number' min='0' id='received' name='received' value={received} required />
 			</div>
 			<div class='inputGroup'>
 				<label for='receipt'>Receipt:
@@ -30,9 +32,9 @@ const {receiver,reason,amount,id} = Astro.props;
 				<input type='file' accept='image/*' id='receipt' name='receipt' />
 			</div>
 		</div>
-		<div>
+		<div class='flex flex-row gap-2'>
 			<button type='button' class='bg-red-400 p-1 px-4 text-white' type='button'>Cancel</button>
-			<button type='submit' class='bg-green-400 p-1 px-4 text-white' type='button'>Proceed</button>
+			<button type='submit' class='bg-green-400 p-1 px-4 text-white flex flex-row justify-center items-center' type='button'><i class="group-[.htmx-request]/payment:inline-block fa-solid fa-spinner animate-spin mr-2 hidden"></i>Proceed</button>
 		</div>
 	</form>
 </label>
