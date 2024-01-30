@@ -1,0 +1,66 @@
+---
+export const prerender = false;
+export const partial = true;
+
+import { app } from "../../firebase/server";
+import { getAuth } from "firebase-admin/auth";
+import {
+	getAuth as clientAuth,
+	inMemoryPersistence,
+	signInWithEmailAndPassword,
+} from "firebase/auth";
+// /////////// CLIENT /////////////////////////
+import { app as clientApp } from "../../firebase/client";
+const auth2 = clientAuth(clientApp);
+auth2.setPersistence(inMemoryPersistence);
+const formData = await Astro.request.formData();
+const email = formData.get("email")?.toString();
+const password = formData.get("password")?.toString();
+
+if (!email || !password) {
+	return;
+}
+const userCredential = await signInWithEmailAndPassword(
+	auth2,
+	email,
+	password
+);
+const idToken = await userCredential.user.getIdToken();
+
+const auth = getAuth(app);
+
+/* Get token from request headers */
+if (!idToken) {
+	return new Response(
+		"No token found",
+		{ status: 401 }
+	);
+}
+
+/* Verify id token */
+try {
+	await auth.verifyIdToken(idToken);
+} catch (error) {
+	return new Response(
+		"Invalid token",
+		{ status: 401 }
+	);
+}
+
+/* Create and set session cookie */
+const fiveDays = 60 * 60 * 24 * 5 * 1000;
+const sessionCookie = await auth.createSessionCookie(idToken, {
+	expiresIn: fiveDays,
+});
+
+Astro.cookies.set("session", sessionCookie, {
+	path: "/",
+});
+
+return new Response("Sccess",{
+	status:200,
+	headers:{
+		'HX-Redirect': '/',
+	}
+}); 
+---

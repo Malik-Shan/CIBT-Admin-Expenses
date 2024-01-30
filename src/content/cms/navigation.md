@@ -3,7 +3,7 @@ navigations:
     - name: Home
       icon: fa-solid fa-house
       link: '/'
-    - name: User
+    - name: Add Users
       icon: fa-regular fa-user
-      link: '/user'
+      link: '/add'
 ---

@@ -1,0 +1,70 @@
+---
+export const prerender = false;
+import Layout from '../layouts/Layout.astro';
+import {app} from '../firebase/server';
+import {getAuth} from 'firebase-admin/auth';
+
+const auth = getAuth(app);
+
+let decodedCookie;
+let user; 
+if(Astro.cookies.has('session')){
+	const sessionCookie = Astro.cookies.get('session').value;
+	try {
+		decodedCookie = await auth.verifySessionCookie(sessionCookie);
+	}catch(err){
+		Astro.cookies.set('session','', {expires : new Date(0)});
+		return Astro.redirect('/login');
+	}
+	try {
+		user = await auth.getUser(decodedCookie.uid);
+	} catch(err){
+		Astro.cookies.set('session','', {expires : new Date(0)});
+		return Astro.redirect('/login');
+	}
+}else{
+	return Astro.redirect('/login')
+}
+---
+<Layout title='Login'>
+	<main class='min-h-dvh'>
+		<div class='fixed inset-0 w-full h-full flex justify-center items-center'>
+			<form id='login' class='flex flex-col gap-4 bg-slate-700 p-8 rounded-md w-full max-w-[400px] max-sm:max-w-full max-sm:h-full group/form'
+				hx-post='/api/firebase/auth/register'
+				hx-trigger='submit'
+				hx-indicator='#login'
+				hx-swap='none'
+				hx-on::after-request="if(event.detail.successful) this.reset()">
+				<h2 class='text-4xl text-slate-500 font-bold text-center mb-3'>Register</h2>
+				<div class='inputGroup'>
+					<input class='peer/i' placeholder='' type='text' id='name' name='name' />
+					<label class='peer-focus/i:-top-3 -top-3 peer-placeholder-shown/i:top-2' for='name'>Name</label>
+				</div>
+				<div class='inputGroup'>
+					<input class='peer/i' placeholder='' type='email' id='email' name='email' />
+					<label class='peer-focus/i:-top-3 -top-3 peer-placeholder-shown/i:top-2' for='email'>Email</label>
+				</div>
+				<div class='inputGroup'>
+					<input class='peer/i' placeholder='' type='text' id='roles' name='roles' />
+					<label class='peer-focus/i:-top-3 -top-3 peer-placeholder-shown/i:top-2' for='roles'>Roles</label>
+				</div>
+				<div class='inputGroup'>
+					<input class='peer/i' placeholder='' type='password' id='password' name='password' />
+					<label class='peer-focus/i:-top-3 -top-3 peer-placeholder-shown/i:top-2' for='password'>Password</label>
+				</div>
+				<button class='bg-sky-300 rounded-md text-sky-800 p-2 font-bold'><i class="fa-solid fa-spinner mr-2 group-[&.htmx-request]/form:inline-block hidden animate-spin"></i>Add</button>
+			</form>
+		</div>
+	</main>
+</Layout>
+<style>
+#login label{
+	@apply text-slate-400 bg-slate-700 absolute left-2 px-1 transition-all;
+}
+#login input{
+	@apply p-2 rounded-sm bg-slate-700 border border-slate-500 text-slate-300;
+}
+.inputGroup{
+	@apply flex flex-col w-full relative;
+}
+</style>

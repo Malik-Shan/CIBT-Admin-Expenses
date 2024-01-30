@@ -7,6 +7,31 @@ import StatsCard from '../components/StatsCard.astro';
 import RecentTransactions from '../components/RecentTransactions.astro';
 import PendingTransactions from '../components/PendingTransactions.astro';
 
+import {app} from '../firebase/server';
+import {getAuth} from 'firebase-admin/auth';
+
+const auth = getAuth(app);
+
+let decodedCookie;
+let user; 
+if(Astro.cookies.has('session')){
+	const sessionCookie = Astro.cookies.get('session').value;
+	try {
+		decodedCookie = await auth.verifySessionCookie(sessionCookie);
+	}catch(err){
+		Astro.cookies.set('session','', {expires : new Date(0)});
+		return Astro.redirect('/login');
+	}
+	try {
+		user = await auth.getUser(decodedCookie.uid);
+	} catch(err){
+		Astro.cookies.set('session','', {expires : new Date(0)});
+		return Astro.redirect('/login');
+	}
+}else{
+	return Astro.redirect('/login')
+}
+
 import * as DataOf from '../content/cms/eco-dataof.md'
 const date = Intl.DateTimeFormat('en-PK',{
 	timeZone:'Asia/Karachi',
@@ -22,7 +47,7 @@ const {result} = await p.json();
 
 	<main class='w-full h-full min-h-dvh'>
 
-		<Topbar />
+		<Topbar userImg={user.photoURL}/>
 		<SideNavigation />
 		
 

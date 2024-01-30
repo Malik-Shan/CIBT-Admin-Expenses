@@ -1,5 +1,5 @@
 ---
-
+const {userImg} = Astro.props;
 ---
 <section class='h-[var(--topbar-height)] flex flex-row items-center'>
 	<div class='topbar w-full  justify-between py-2 border-b border-b-slate-600'>
@@ -13,7 +13,7 @@
 			<input class='w-full max-w-[400px] min-w-[250px] h-full rounded-sm bg-slate-600 p-2 font-semibold text-white' type='search' placeholder='Search...'/>
 		</form>
 		<div class='profile block ml-auto px-4'>
-			<img class='w-[40px]' src='https://cdn-icons-png.freepik.com/512/6915/6915987.png' />
+			<img class='w-[40px]' src={userImg}/>
 		</div>
 
 	</div>
